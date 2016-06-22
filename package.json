@@ -1,0 +1,22 @@
+{
+  "name": "chart-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.3.0",
+    "chart.js": "^1.1.1",
+    "react": "^15.1.0",
+    "react-chartjs": "^0.7.3",
+    "react-dom": "^15.1.0",
+    "react-typeahead": "^1.1.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -t [ babelify --presets [ react ] ] src/index.js -o build/app.js"
+  },
+  "author": "Aaditya Thakkar",
+  "license": "MIT"
+}
