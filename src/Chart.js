@@ -17,7 +17,7 @@ var Chart = React.createClass({
   getInitialState: function() {
     return ({
       data : {
-        labels: ["001", "002", "003", "004", "005", "006", "007"],
+        labels: [],
         datasets: [
           {
             label: "My First dataset",
@@ -25,7 +25,7 @@ var Chart = React.createClass({
             strokeColor: "rgba(220,0,0,0.8)",
             highlightFill: "rgba(220,0,220,0.75)",
             highlightStroke: "rgba(220,0,220,1)",
-            data: [20, 59, 80, 81, 56, 55, 40]
+            data: []
           }
         ]
       },
