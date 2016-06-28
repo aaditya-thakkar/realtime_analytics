@@ -2,8 +2,7 @@ var Appbase = require('appbase-js');
 var config = require("./config.json");
 
 module.exports = {
-	createRequestObject : function(countryArr) {
-		console.log("in object"+countryArr)
+	createRequestObject : function(filteredCountries) {
 		return({
 			type: config.appbase.type,
 			body: {
@@ -11,7 +10,7 @@ module.exports = {
 					"filtered" : {
 						"filter": {
 							"terms":{
-								"country_name": countryArr
+								"country_name": filteredCountries
 							}
 						},
 						"aggs" : {
@@ -25,7 +24,6 @@ module.exports = {
 				}
 			}
 		});
-
 	},
 
 	createAppbaseRef : function(){
