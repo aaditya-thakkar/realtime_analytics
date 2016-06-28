@@ -12,7 +12,6 @@ var Filter = React.createClass({
 
   logChange: function(val) {
     var self=this;
-    console.log("Selected: " + val);
     element.onclick = function() {
       self.props.updateFilter(val);
     };
