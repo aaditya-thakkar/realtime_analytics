@@ -65,7 +65,6 @@ var Chart = React.createClass({
   onFilterUpdate: function(val) {
     var countryArr = [];
     var tempData=this.state.data;
-    // console.log(val);
     // console.log(codeArray);
 
     var updatedLabels = val.split(",",500)
