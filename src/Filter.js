@@ -10,10 +10,10 @@ var Filter = React.createClass({
     });
   },
 
-  logChange: function(val) {
+  logChange: function(selectedValues) {
     var self=this;
     element.onclick = function() {
-      self.props.updateFilter(val);
+      self.props.updateFilter(selectedValues);
     };
   },
 
