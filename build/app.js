@@ -32779,24 +32779,28 @@ var helper = require("./helper");
 var countryArray = [];
 var codeArray = [];
 var appbaseRef = helper.createAppbaseRef();
+
+// country-code to country-name mapping and vice versa
 for (var i = 0; i < countryCode.length; i++) {
   countryArray[countryCode[i].code.toLowerCase()] = countryCode[i].name;
   codeArray[countryCode[i].name] = countryCode[i].code.toLowerCase();
 }
+
+// chart component
 var Chart = React.createClass({
   displayName: 'Chart',
 
   getInitialState: function () {
     return {
       data: {
-        labels: ["001", "002", "003", "004", "005", "006", "007"],
+        labels: [],
         datasets: [{
           label: "My First dataset",
           fillColor: "rgba(220,0,0,0.5)",
           strokeColor: "rgba(220,0,0,0.8)",
           highlightFill: "rgba(220,0,220,0.75)",
           highlightStroke: "rgba(220,0,220,1)",
-          data: [20, 59, 80, 81, 56, 55, 40]
+          data: []
         }]
       },
       options: {
@@ -32811,20 +32815,13 @@ var Chart = React.createClass({
     };
   },
 
-  getRandomNumber: function () {
-    return Math.floor(Math.random() * 100 + 1);
-  },
-
   callStaticUpdates: function (tempData, requestObject) {
-    var resultArr = [];
     var self = this;
     appbaseRef.search(requestObject).on('data', function (stream) {
-      console.log(stream);
       stream.aggregations.filtered.country_count.buckets.map(function (bucket, index) {
         var indexOfCountry = tempData.labels.indexOf(countryArray[bucket.key]);
         tempData.datasets[0].data[indexOfCountry] = bucket.doc_count;
       });
-
       self.setState({
         data: tempData
       });
@@ -32833,29 +32830,23 @@ var Chart = React.createClass({
     });
   },
 
-  onFilterUpdate: function (val) {
-    var countryArr = [];
+  onFilterUpdate: function (selectedValues) {
+    var filteredCountries = [];
     var tempData = this.state.data;
-    // console.log(val);
-    // console.log(codeArray);
-
-    var updatedLabels = val.split(",", 500);
+    var updatedLabels = selectedValues.split(",", 500);
     for (var i = 0; i < updatedLabels.length; i++) {
-      console.log(updatedLabels[i]);
-      countryArr.push(codeArray[updatedLabels[i]]);
+      filteredCountries.push(codeArray[updatedLabels[i]]);
     }
-    console.log(countryArr);
-    //tempData.labels = updatedLabels;
+    tempData.labels = updatedLabels;
     var updatedData = [];
+    // initially all labels have 0 values
     for (var i = 0; i < updatedLabels.length; i++) {
       updatedData[i] = 0;
     }
-    var requestObject = helper.createRequestObject(countryArr);
+    var requestObject = helper.createRequestObject(filteredCountries);
     tempData.datasets[0].data = updatedData;
     this.callStaticUpdates(tempData, requestObject);
   },
-
-  componentDidMount: function () {},
 
   render: function () {
     return React.createElement(
@@ -32884,11 +32875,10 @@ var Filter = React.createClass({
     };
   },
 
-  logChange: function (val) {
+  logChange: function (selectedValues) {
     var self = this;
-    console.log("Selected: " + val);
     element.onclick = function () {
-      self.props.updateFilter(val);
+      self.props.updateFilter(selectedValues);
     };
   },
 
@@ -34162,18 +34152,15 @@ var Appbase = require('appbase-js');
 var config = require("./config.json");
 
 module.exports = {
-	createRequestObject: function (countryArr) {
-		console.log("in object" + countryArr);
+	createRequestObject: function (filteredCountries) {
 		return {
 			type: config.appbase.type,
 			body: {
-
 				"aggs": {
 					"filtered": {
-
 						"filter": {
 							"terms": {
-								"country_name": countryArr
+								"country_name": filteredCountries
 							}
 						},
 						"aggs": {
@@ -34183,7 +34170,6 @@ module.exports = {
 								}
 							}
 						}
-
 					}
 				}
 			}
